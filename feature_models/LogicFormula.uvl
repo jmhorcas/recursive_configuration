@@ -1,0 +1,33 @@
+namespace Salad
+
+features
+	Expr {abstract}	
+		alternative
+			Operators {abstract}	
+				mandatory
+					Connectives {abstract}	
+						alternative
+							UnaryOp {abstract}	
+								mandatory
+									Not
+							BinaryOp {abstract}	
+								alternative
+									Or
+									And
+									Implies
+									BiImplication
+					Operands {abstract}	
+						optional
+							LExpr {abstract}	
+								mandatory
+									Expr1 {abstract}
+
+						mandatory
+							RExpr {abstract}	
+								mandatory
+									Expr2 {abstract}
+			Variable
+
+constraints
+	Not => !LExpr
+	BinaryOp => LExpr

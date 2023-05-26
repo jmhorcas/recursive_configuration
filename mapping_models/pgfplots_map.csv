@@ -1,0 +1,8 @@
+VariationPointFeature, Handler, VariantIdentifier, VariantValue
+Connectives, Expr, UnaryOp, {{ operand }} {{ Expr }}
+Connectives, Expr, BinaryOp, {{ Expr }} {{ operand }} {{ Expr }}
+UnaryOp, operand, Not, !
+BinaryOp, operand, Or, ||
+BinaryOp, operand, And, &&
+BinaryOp, operand, Implies, =>
+BinaryOp, operand, BiImplies, <=>
