@@ -1,1 +1,1 @@
-=> {{ Expr }} {{ operand }} {{ Expr }} && {{ Expr }} {{ operand }} {{ Expr }} ! => {{ Expr }} {{ operand }} {{ Expr }} && {{ Expr }} {{ operand }} {{ Expr }}
+Y && Y

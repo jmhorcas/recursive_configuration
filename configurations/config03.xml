@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
 	<feature automatic="selected" name="Expr"/>
-	<feature automatic="selected" manual="selected" name="Operators"/>
 	<feature automatic="selected" name="Connectives"/>
 	<feature manual="selected" name="UnaryOp"/>
 	<feature automatic="selected" name="Not"/>
@@ -13,7 +12,8 @@
 	<feature automatic="selected" name="Operands"/>
 	<feature automatic="unselected" name="LExpr"/>
 	<feature automatic="unselected" name="Expr1"/>
+	<feature automatic="unselected" name="Var1"/>
 	<feature automatic="selected" name="RExpr"/>
-	<feature automatic="selected" name="Expr2"/>
-	<feature automatic="unselected" name="Variable"/>
+	<feature automatic="unselected" name="Expr2"/>
+	<feature manual="selected" name="Var2"/>
 </configuration>

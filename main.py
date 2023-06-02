@@ -2,6 +2,7 @@ import os
 import argparse
 import csv
 import shutil
+import copy
 from typing import Any
 
 import jinja2
@@ -9,6 +10,8 @@ import jinja2
 from xml.etree import ElementTree
 
 from flamapy.metamodels.configuration_metamodel.models import Configuration
+from flamapy.metamodels.pysat_metamodel.transformations import FmToPysat
+from flamapy.metamodels.pysat_metamodel.operations import Glucose3Products
 
 from flamapy.metamodels.fm_metamodel.models import FeatureModel, Feature
 from flamapy.metamodels.fm_metamodel.transformations import UVLReader
@@ -111,6 +114,20 @@ def load_mapping_model(filepath: str, fm: FeatureModel) -> dict[str, VariationPo
     return variation_points
 
 
+def mapping_model_by_configurations(mapping_model: dict[str, VariationPoint], configurations: list[Configuration]) -> list[dict[str, VariationPoint]]:
+    map_models = []
+    for i, config in enumerate(configurations):
+        rec_features = [f for f in config.get_selected_elements() if any(a.name == 'rec' for a in f.attributes)]
+        new_mapping_model = copy.deepcopy(mapping_model)
+        for k, v in new_mapping_model.items():
+            if v.handler == 'Expr':
+                v.handler = f'{v.handler}{i-1}' if i != 0 else v.handler
+                for variant in v.variants:
+                    variant.value = variant.value.replace('Expr', f'Expr{i}')
+        map_models.append(new_mapping_model)
+    return map_models
+
+
 def is_selected_in_a_configuration(feature: Feature, configurations: list[Configuration]) -> bool:
     return any(feature in config.elements and config.elements[feature] for config in configurations)
 
@@ -190,22 +207,33 @@ if __name__ == '__main__':
     # Load the feature models
     fm = load_feature_model()
 
+    sat_model = FmToPysat(fm).transform()
+    products = Glucose3Products().execute(sat_model).get_result()
+    print('PRODUCTS:')
+    for i, p in enumerate(products):
+        print(f'{i}: {[f for f in p if not fm.get_feature_by_name(f).is_abstract]}')
+
+
     # Parse configurations and attributes
     configurations = [parse_configuration(file, fm) for file in configurations_files]
     attributes = [parse_attributes(file) for file in attributes_files]
 
-    # # Load the mapping model
-    mapping_model = load_mapping_model('mapping_models/pgfplots_map.csv', fm)
+    # Load the mapping model
+    mapping_model = load_mapping_model('mapping_models/mapping_model.csv', fm)
     print(f'MAPPING MODEL:')
     for i, vp in enumerate(mapping_model.values()):
         print(f'|-vp{i}: {vp}')
-
+    map_models = mapping_model_by_configurations(mapping_model, configurations)
+    print(f'MAP MODELS:')
+    for mm in map_models:
+        for i, vp in enumerate(mm.values()):
+            print(f'|-vp{i}: {vp}')
 
     shutil.copyfile('templates/template.txt', 'formula.txt')
 
-    for configuration in configurations:
+    for configuration, map_model in zip(configurations, map_models):
         print(f'Configuration: {[c.name for c in configuration.get_selected_elements()]}')
-        maps = build_template_maps(fm, mapping_model, [configuration], attributes)
+        maps = build_template_maps(fm, map_model, [configuration], attributes)
         print(f'TEMPLATE CONFIGURATION:')
         for h, v in maps.items():
             if isinstance(v, list):

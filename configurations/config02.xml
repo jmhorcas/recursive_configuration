@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<feature automatic="selected" name="Expr"/>
+	<feature automatic="selected" name="Connectives"/>
+	<feature automatic="unselected" name="UnaryOp"/>
+	<feature automatic="unselected" name="Not"/>
+	<feature automatic="selected" name="BinaryOp"/>
+	<feature automatic="unselected" name="Or"/>
+	<feature manual="selected" name="And"/>
+	<feature automatic="unselected" name="Implies"/>
+	<feature automatic="unselected" name="BiImplication"/>
+	<feature automatic="selected" name="Operands"/>
+	<feature automatic="selected" name="LExpr"/>
+	<feature manual="selected" name="Expr1"/>
+	<feature automatic="unselected" name="Var1"/>
+	<feature automatic="selected" name="RExpr"/>
+	<feature automatic="unselected" name="Expr2"/>
+	<feature manual="selected" name="Var2"/>
+</configuration>
